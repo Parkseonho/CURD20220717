@@ -16,6 +16,8 @@ public class ArticleController {
     @Autowired
     ArticleRepository articleRepository;
 
+//------------------------------------------------------------
+
     @RequestMapping("/doWrite")
     @ResponseBody
     public String doWrite(String title, String body){
@@ -37,6 +39,8 @@ public class ArticleController {
 
     }
 
+//------------------------------------------------------------
+
     @RequestMapping("/list")
     @ResponseBody
     public List<Article> showList(){
@@ -45,9 +49,37 @@ public class ArticleController {
 
     @RequestMapping("/detail")
     @ResponseBody
-    public Article showDetail(long id){
+    public Article showDetail(Long id){
         Article article = articleRepository.findById(id).get();
-
         return article;
     }
+
+//------------------------------------------------------------
+    @RequestMapping("/doModify")
+    @ResponseBody
+    public String doModify(Long id, String title, String body){
+        if(id == null){
+            return "게시물번호를 입력해주세요";
+        }
+        if(Ut.empty(title)){
+            return "제목을 입력해주세요.";
+        }
+        if(Ut.empty(body)){
+            return "내용을 입력해주세요.";
+        }
+        if(!articleRepository.existsById(id)){
+            return "게시물이 없습니다.";
+        }
+
+        Article article = articleRepository.findById(id).get();
+
+        article.setTitle(title);
+        article.setBody(body);
+        article.setUpdateDate(LocalDateTime.now());
+
+        articleRepository.save(article);
+
+        return "%d번 게시물 수정이 완료되었습니다.".formatted(article.getId());
+    }
+
 }
