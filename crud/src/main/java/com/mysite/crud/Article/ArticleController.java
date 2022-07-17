@@ -82,4 +82,17 @@ public class ArticleController {
         return "%d번 게시물 수정이 완료되었습니다.".formatted(article.getId());
     }
 
+//------------------------------------------------------------
+
+    @RequestMapping("/doDelete")
+    @ResponseBody
+    public String doDelete(Long id){
+        if(!articleRepository.existsById(id)){
+            return "%d번 게시물은 없습니다.".formatted(id);
+        }
+        Article article = articleRepository.findById(id).get();
+        articleRepository.delete(article);
+
+        return "%번 게시물을 삭제했습니다.".formatted(id);
+    }
 }
