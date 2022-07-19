@@ -1,5 +1,7 @@
 package com.mysite.crud.Article;
 
+import com.mysite.crud.User.User;
+import com.mysite.crud.User.UserRepository;
 import com.mysite.crud.Ut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,8 @@ public class ArticleController {
 
     @Autowired
     ArticleRepository articleRepository;
+    @Autowired
+   UserRepository userRepository;
 
 //------------------------------------------------------------
 
@@ -32,10 +36,11 @@ public class ArticleController {
         article.setUpdateDate(LocalDateTime.now());
         article.setTitle(title);
         article.setBody(body);
-        article.setUserId(1L);
+        User user = userRepository.findById(1L).get();
+        article.setUser(user);
 
         articleRepository.save(article);
-        return "%d번 게시물 생성이 완료되었습니다.".formatted(article.getId());
+        return "%d번 게시물 생성이 완료되었습니다.".formatted(user.getId());
 
     }
 
